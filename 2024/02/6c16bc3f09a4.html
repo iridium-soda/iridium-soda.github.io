@@ -26,7 +26,7 @@
 <meta property="og:description" content="在干净的Ubuntu系统上安装BCC并进行测试. Ref https:&#x2F;&#x2F;github.com&#x2F;iovisor&#x2F;bcc&#x2F;blob&#x2F;master&#x2F;INSTALL.md#ubuntu---source   环境 Ubuntu 22.04 4GB RAM or above  StepsPrep安装依赖 123apt install -y zip bison build-essential cmake f">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2024-02-24T07:31:31.000Z">
-<meta property="article:modified_time" content="2024-02-24T09:20:19.559Z">
+<meta property="article:modified_time" content="2024-03-13T13:18:04.190Z">
 <meta property="article:author" content="Louis Liu">
 <meta name="twitter:card" content="summary">
     
@@ -624,8 +624,8 @@ mjx-container[display="true"] + br {
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="desktop">24-02-24 17:20:19</span>
-            <span class="mobile">24-02-24 17:20:19</span>
+            <span class="desktop">24-03-13 21:18:04</span>
+            <span class="mobile">24-03-13 21:18:04</span>
             <span class="hover-info">Updated</span>
         </span>
     
@@ -652,7 +652,7 @@ mjx-container[display="true"] + br {
     
     
         <span class="article-wordcount article-meta-item">
-            <i class="fa-regular fa-typewriter"></i>&nbsp;<span>146 Words</span>
+            <i class="fa-regular fa-typewriter"></i>&nbsp;<span>286 Words</span>
         </span>
     
     
@@ -698,6 +698,8 @@ mjx-container[display="true"] + br {
 <p>如果安装正常,应该能在<code>usr/share/bcc</code>目录下看到<code>tools</code>目录</p>
 <h3 id="Test"><a href="#Test" class="headerlink" title="Test"></a>Test</h3><div class="highlight-container" data-rel="Bash"><figure class="iseeu highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /usr/share/bcc/tools</span><br><span class="line">sudo ./cachestat 1 3</span><br><span class="line">sudo ./execsnoop</span><br></pre></td></tr></table></figure></div>
 
+<h2 id="Update"><a href="#Update" class="headerlink" title="Update"></a>Update</h2><p>可以使用这里的一键脚本：<br><a class="link" target="_blank" rel="noopener" href="https://github.com/seclab-stonybrook/eaudit/blob/master/bcc_install.sh">https://github.com/seclab-stonybrook/eaudit/blob/master/bcc_install.sh <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<div class="highlight-container" data-rel="Shell"><figure class="iseeu highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">fatal() {</span><br><span class="line">  echo "BCC installation failed at the following step: $1"</span><br><span class="line">  exit 1</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line">sudo apt update || fatal "apt update"</span><br><span class="line">sudo apt install -y zip bison build-essential cmake flex git libedit-dev \</span><br><span class="line">  libllvm14 llvm-14-dev libclang-14-dev python3 zlib1g-dev libelf-dev libfl-dev \</span><br><span class="line">  python3-setuptools liblzma-dev libdebuginfod-dev \</span><br><span class="line">  || fatal "apt install (of required development packages)"</span><br><span class="line">mkdir src || fatal "mkdir"</span><br><span class="line">cd src</span><br><span class="line">git clone https://github.com/iovisor/bcc.git || fatal "cloning BCC source from iovisor"</span><br><span class="line">mkdir bcc/build; cd bcc/build </span><br><span class="line">cmake .. || fatal "cmake"</span><br><span class="line">make || fatal "Building BCC from source"</span><br><span class="line">sudo make install || fatal "installing BCC"</span><br><span class="line">cmake -DPYTHON_CMD=python3 .. || fatal "building python3 bindings"</span><br><span class="line">pushd src/python/</span><br><span class="line">( make &amp;&amp; sudo make install ) || fatal "installing python bindings"</span><br></pre></td></tr></table></figure></div>
         </div>
 
         
@@ -711,7 +713,7 @@ mjx-container[display="true"] + br {
         
             <li>
                 <strong>Updated at
-                    :</strong> 24-02-24 17:20:19
+                    :</strong> 24-03-13 21:18:04
             </li>
         
         <li>
@@ -769,7 +771,7 @@ mjx-container[display="true"] + br {
     <div class="post-toc">
         <div class="toc-title">On this page</div>
         <div class="page-title">install_bcc</div>
-        <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Ref"><span class="nav-number">1.</span> <span class="nav-text">Ref</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%8E%AF%E5%A2%83"><span class="nav-number">2.</span> <span class="nav-text">环境</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Steps"><span class="nav-number">3.</span> <span class="nav-text">Steps</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Prep"><span class="nav-number">3.1.</span> <span class="nav-text">Prep</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Compile"><span class="nav-number">3.2.</span> <span class="nav-text">Compile</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Test"><span class="nav-number">3.3.</span> <span class="nav-text">Test</span></a></li></ol></li></ol>
+        <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Ref"><span class="nav-number">1.</span> <span class="nav-text">Ref</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%8E%AF%E5%A2%83"><span class="nav-number">2.</span> <span class="nav-text">环境</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Steps"><span class="nav-number">3.</span> <span class="nav-text">Steps</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Prep"><span class="nav-number">3.1.</span> <span class="nav-text">Prep</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Compile"><span class="nav-number">3.2.</span> <span class="nav-text">Compile</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Test"><span class="nav-number">3.3.</span> <span class="nav-text">Test</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Update"><span class="nav-number">4.</span> <span class="nav-text">Update</span></a></li></ol>
 
     </div>
 </div>
@@ -806,7 +808,7 @@ mjx-container[display="true"] + br {
                     </span>
                     
                         <span>
-                            7.6k words in total
+                            7.7k words in total
                         </span>
                     
                 </p>
