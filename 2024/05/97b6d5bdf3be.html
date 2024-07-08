@@ -26,7 +26,7 @@
 <meta property="og:description" content="Background由于学校服务器的安全限制,只给了一个一般用户的账号,需要自己创建容器在里面跑程序.在创建好容器(基于Ubuntu24.04)并配置好环境后,发现不能用pubkey连接上ssh,定位排查问题花了很多时间,所以简单记录一下. Docker环境配置Docker创建首先用下面的命令模板创建docker: 1docker run -p [port]:22 --ipc&#x3D;host --res">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2024-05-04T15:38:41.000Z">
-<meta property="article:modified_time" content="2024-07-01T15:36:55.956Z">
+<meta property="article:modified_time" content="2024-07-08T15:03:49.669Z">
 <meta property="article:author" content="Louis Liu">
 <meta property="article:tag" content="Docker">
 <meta property="article:tag" content="Linux">
@@ -627,8 +627,8 @@ mjx-container[display="true"] + br {
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="desktop">24-07-01 23:36:55</span>
-            <span class="mobile">24-07-01 23:36:55</span>
+            <span class="desktop">24-07-08 23:03:49</span>
+            <span class="mobile">24-07-08 23:03:49</span>
             <span class="hover-info">Updated</span>
         </span>
     
@@ -674,7 +674,7 @@ mjx-container[display="true"] + br {
     
     
         <span class="article-wordcount article-meta-item">
-            <i class="fa-regular fa-typewriter"></i>&nbsp;<span>1.7k Words</span>
+            <i class="fa-regular fa-typewriter"></i>&nbsp;<span>1.8k Words</span>
         </span>
     
     
@@ -756,6 +756,8 @@ mjx-container[display="true"] + br {
 <p>可以看到由host创建的目录如果没有修改(<code>permissiontest</code>),权限为775,对于sshd来说过于open,所以导致错误.而修改后的目录(<code>cadets</code>)权限为755,这样可以满足要求.</p>
 <p>继续考虑原因.由于容器内部是以root用户运行的,因此内部的root是和host上的root被认为是一回事——而其用户目录(<code>/root/</code>)是由normal user创建的并且挂载到内部覆盖了镜像自动创建的用户目录,所以出现了权限问题,而如果是没有挂载的默认情况应该不会出现,这涉及到docker容器的user namespace机制.</p>
 <p>以及还是要多想办法看日志才能确定问题,否则就会陷入到盲人摸象的困境里.长期计划做一个自动化的脚本或者基于ubuntu做一个镜像,从而不需要手动做这么多事情.(但即使镜像设定好了,挂载的时候还是会覆盖掉啊)</p>
+<h1 id="后日谈"><a href="#后日谈" class="headerlink" title="后日谈"></a>后日谈</h1><p>后来在实践过程中发现了上文的一些错误和不完善的地方。因此后来修改了一个脚本，托管在<a class="link" target="_blank" rel="noopener" href="https://gitlab.com/-/snippets/3723520">GitLab <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a>上（因为GitHub有时候会连不上443）。创建了一个全新的容器之后，执行下面的命令。目前只支持22.04和24.04.注意脚本里面的pubkey需要替换成自己的</p>
+<div class="highlight-container" data-rel="Shell"><figure class="iseeu highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">apt update &amp;&amp; apt install -y wget</span><br><span class="line">wget https://gitlab.com/-/snippets/3723520/raw/main/init_22.04.sh # For 22.04</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Or</span></span><br><span class="line">wget https://gitlab.com/-/snippets/3723520/raw/main/init_24.04.sh # For 24.04</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Modify ssh pubkey at L27</span></span><br><span class="line">source init_22.04.sh # Or 24.04.sh</span><br></pre></td></tr></table></figure></div>
 
         </div>
 
@@ -770,7 +772,7 @@ mjx-container[display="true"] + br {
         
             <li>
                 <strong>Updated at
-                    :</strong> 24-07-01 23:36:55
+                    :</strong> 24-07-08 23:03:49
             </li>
         
         <li>
@@ -859,7 +861,7 @@ mjx-container[display="true"] + br {
     <div class="post-toc">
         <div class="toc-title">On this page</div>
         <div class="page-title">Linux容器使用公钥SSH登录失败排障</div>
-        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Background"><span class="nav-number">1.</span> <span class="nav-text">Background</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Docker%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE"><span class="nav-number">2.</span> <span class="nav-text">Docker环境配置</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Docker%E5%88%9B%E5%BB%BA"><span class="nav-number">2.1.</span> <span class="nav-text">Docker创建</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Docker%E4%BE%9D%E8%B5%96%E5%AE%89%E8%A3%85"><span class="nav-number">2.2.</span> <span class="nav-text">Docker依赖安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E5%92%8C%E9%85%8D%E7%BD%AESSH"><span class="nav-number">2.3.</span> <span class="nav-text">安装和配置SSH</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E5%87%BA%E7%8E%B0%E5%92%8C%E5%AE%9A%E4%BD%8D"><span class="nav-number">3.</span> <span class="nav-text">问题出现和定位</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E4%BF%AE%E5%A4%8D"><span class="nav-number">4.</span> <span class="nav-text">问题修复</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%80%9D%E8%80%83"><span class="nav-number">5.</span> <span class="nav-text">思考</span></a></li></ol>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Background"><span class="nav-number">1.</span> <span class="nav-text">Background</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Docker%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE"><span class="nav-number">2.</span> <span class="nav-text">Docker环境配置</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Docker%E5%88%9B%E5%BB%BA"><span class="nav-number">2.1.</span> <span class="nav-text">Docker创建</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Docker%E4%BE%9D%E8%B5%96%E5%AE%89%E8%A3%85"><span class="nav-number">2.2.</span> <span class="nav-text">Docker依赖安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E5%92%8C%E9%85%8D%E7%BD%AESSH"><span class="nav-number">2.3.</span> <span class="nav-text">安装和配置SSH</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E5%87%BA%E7%8E%B0%E5%92%8C%E5%AE%9A%E4%BD%8D"><span class="nav-number">3.</span> <span class="nav-text">问题出现和定位</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E4%BF%AE%E5%A4%8D"><span class="nav-number">4.</span> <span class="nav-text">问题修复</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%80%9D%E8%80%83"><span class="nav-number">5.</span> <span class="nav-text">思考</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%90%8E%E6%97%A5%E8%B0%88"><span class="nav-number">6.</span> <span class="nav-text">后日谈</span></a></li></ol>
 
     </div>
 </div>
@@ -896,7 +898,7 @@ mjx-container[display="true"] + br {
                     </span>
                     
                         <span>
-                            17.2k words in total
+                            17.3k words in total
                         </span>
                     
                 </p>
